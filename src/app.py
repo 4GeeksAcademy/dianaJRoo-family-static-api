@@ -15,6 +15,33 @@ CORS(app)
 # create the jackson family object
 jackson_family = FamilyStructure("Jackson")
 
+Jhon = {
+    "id": jackson_family._generateId(),
+    "name":"John Jackson",
+    "age": "33 Years old",
+    "lucky_numbers": [7, 13, 22]
+}
+
+jackson_family.add_member(Jhon)
+
+Jane = {
+    "id": jackson_family._generateId(),
+    "name":"Jane Jackson",
+    "age":"35 Years old",
+    "lucky_numbers": [10, 14, 3]
+}
+
+jackson_family.add_member(Jane)
+
+Jimmy = {
+    "id": jackson_family._generateId(),
+    "name": "Jimmy  Jackson",
+    "age": "5 Years old",
+    "lucky_numbers": 1
+}
+
+jackson_family.add_member(Jimmy)
+
 # Handle/serialize errors like a JSON object
 @app.errorhandler(APIException)
 def handle_invalid_usage(error):
@@ -52,16 +79,22 @@ def add_member():
         return jsonify(new_member), 201
      return jsonify(success), 400
 
-@app.route('/members', methods=['DELETE'])
-def delete_member():
+@app.route('/members/<int:member_id>', methods=['DELETE'])
+def delete_member(member_id):
 
-     delete_member = request.json
+     success = jackson_family.delete_member(member_id)
+    
+     return jsonify(success), 200
 
-     success = jackson_family.delete_member(delete_member)
-     if success == True: 
-         
-        return jsonify(delete_member), 201
-     return jsonify(success), 400
+@app.route('/members/<int:member_id>', methods=['GET'])
+def get_member(member_id):
+    
+    member = jackson_family.get_member(member_id)
+    
+    if member:
+        return jsonify(member), 200  
+    else:
+        return jsonify({'error': 'Member not found'}), 404
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
