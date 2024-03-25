@@ -38,13 +38,12 @@ class FamilyStructure:
         
 
     def delete_member(self, id):
-    
      for member in self._members:
-        
         if member['id'] == id:
             self._members.remove(member)
-        return self._members    
-
+     return self._members  
+        
+    
             
             
 
